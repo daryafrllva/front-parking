@@ -9,13 +9,11 @@ function App() {
     return (
         <Router>
             <Header />
-            <div style={{ paddingTop: '147px' }}>
             <Routes>
             <Route path="/" element={<HomePage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/Enter-email" element={<EnterEmail />} />
             </Routes>
-            </div>
             <Footer />
         </Router>
     );
