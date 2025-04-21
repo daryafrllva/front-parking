@@ -1,0 +1,24 @@
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import HomePage from './components/HomePage';
+import { LoginPage } from './pages/LoginPages/LoginPage';
+import { EnterEmail } from './components/authorization/EnterEmail';
+function App() {
+    return (
+        <Router>
+            <Header />
+            <div style={{ paddingTop: '147px' }}>
+            <Routes>
+            <Route path="/" element={<HomePage />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/Enter-email" element={<EnterEmail />} />
+            </Routes>
+            </div>
+            <Footer />
+        </Router>
+    );
+}
+
+export default App;
