@@ -1,7 +1,9 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form'; //Возможно не понадобится
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import VhodModal from '../../components/authorization/VhodModal';
+import exit from '../../assets/svg-sprite/exit.svg';
 
 
 export const LoginPage = () => {
@@ -11,21 +13,39 @@ export const LoginPage = () => {
         formState: { errors }
     } = useForm();
 
-
+    const navigate = useNavigate();
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
 
     const onSubmit = async (data) => {
         console.log("Данные формы:", data);
-    }; //Обработка отправки формы
+        localStorage.setItem('access_token', 'simulated_token');
+        setShowSuccessModal(true);
+    };
+
+    const handleModalClose = () => {
+        setShowSuccessModal(false);
+        navigate('/Profile');
+    };
+    //Обработка отправки формы
 
         return (
             <div className="login">
+
+                {showSuccessModal && <VhodModal onClose={handleModalClose} />}
                 <div className="login__body">
 
 
                     <div className="login__container">
-                        <h1>Введите логин и пароль</h1>
-                        <form onSubmit={handleSubmit(onSubmit)} className="login__form">
 
+                        <form onSubmit={handleSubmit(onSubmit)} className="login__form">
+                            <Link to="/">
+                                <img
+                                    src={exit}
+                                    alt="Логотип"
+                                    className="login__container-btn"
+                                />
+                            </Link>
+                            <h1>Введите логин и пароль</h1>
 
                             <div className="login__form-group">
 
@@ -46,7 +66,6 @@ export const LoginPage = () => {
                                     <p className="login__form-error">{errors.email.message}</p>
                                 )}
 
-                                <br />
                                 <input
 
                                     type="password"
@@ -69,11 +88,11 @@ export const LoginPage = () => {
                                     <p className="login__form-error">{errors.root.message}</p>
                                 )}
 
-                                <button className="login__join-btn" type="submit">
+                                <button className="login__form__join-btn" type="submit">
                                     Войти
                                 </button>
 
-                                <div className="login__join-btn">
+                                <div className="login__form__join-link">
                                     <Link to="/enter-email">Забыли пароль?</Link>
                                 </div>
                             </div>

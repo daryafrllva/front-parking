@@ -13,8 +13,11 @@ export const EnterEmail = () => {
     const onSubmit = (data) => {
         console.log("данные отправленные", data); // данные на бэк
     }
+
     return (
-        <div className="enter-container">
+
+
+        <div className="enter-container" style={{paddingTop: '147px'}}>
             <h1>Введите e-mail адрес <br/> вашего аккаунта</h1>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <input
