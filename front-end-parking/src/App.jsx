@@ -6,6 +6,9 @@ import HomePage from './components/HomePage';
 import { LoginPage } from './pages/LoginPages/LoginPage';
 import { EnterEmail } from './components/authorization/EnterEmail';
 import Profile from './pages/Profile';
+import {CodeEmail} from './components/authorization/CodeEmail';
+
+
 function App() {
     return (
         <Router>
@@ -15,6 +18,7 @@ function App() {
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/Enter-email" element={<EnterEmail />} />
                 <Route path="/Profile" element={<Profile />} />
+                <Route path="/code-email" element={<CodeEmail />} />
             </Routes>
             <Footer />
         </Router>

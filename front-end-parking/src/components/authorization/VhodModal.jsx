@@ -1,21 +1,29 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import done from '../../assets/svg-sprite/done.svg'
 
-export const VhodModal = ({ onClose }) => {
+const VhodModal = ({ onClose }) => {
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            onClose();
+        }, 10000);
+
+        return () => clearTimeout(timer);
+    }, [onClose]);
+
     return (
         <div className="modal">
             <div className="modal__content">
                 <div className="modal__body">
-                <h3>Вы успешно вошли в аккаунт</h3>
+                    <h3>Вы успешно вошли в аккаунт <img
+                        src={done}
+                        alt="готово"
+                        className="modal__body-img"
+                    /></h3>
 
-                <div className="modal__footer">
-
-                    <button onClick={onClose}>Закрыть</button>
-                    <Link to="/support">Техподдержка</Link>
-                </div>
                 </div>
             </div>
         </div>
     );
 };
+
 export default VhodModal;

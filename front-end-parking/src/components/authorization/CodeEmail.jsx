@@ -1,20 +1,16 @@
 import React, {useState} from 'react';
 import {useForm} from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
 
-export const EnterEmail = () => {
 
+export const CodeEmail = () => {
     const {
         register,
         handleSubmit,
         formState: { errors }
     } = useForm();
-    const navigate = useNavigate();
-
 
     const onSubmit = (data) => {
         console.log("данные отправленные", data); // данные на бэк
-        navigate('/code-email');
     }
 
     return (
@@ -22,17 +18,17 @@ export const EnterEmail = () => {
 
             <div className="login__body" >
                 <form onSubmit={handleSubmit(onSubmit)} className="login__form">
-                    <h1>Введите e-mail адрес <br/> вашего аккаунта</h1>
+                    <h1>Введите код из письма,  <br/> отправленного на ваш e-mail</h1>
                     <input
                         {...register('email', {
-                            required: 'Email обязателен',
+                            required: 'Emai',
                             pattern: {
                                 value: /^\S+@\S+$/i,
                                 message: 'Некорректный email'
                             }
                         })}
-                        type="email"
-                        placeholder="e-mail" />
+                        type="code"
+                        placeholder="xxx-xxx" />
                     {errors.email && <p className="error">{errors.email.message}</p>}
 
                     <button className="login__form__join-btn" type="submit">
@@ -41,5 +37,6 @@ export const EnterEmail = () => {
                 </form>
             </div>
         </div>
+
     )
 }

@@ -19,12 +19,15 @@ export const LoginPage = () => {
     const onSubmit = async (data) => {
         console.log("Данные формы:", data);
         localStorage.setItem('access_token', 'simulated_token');
+        localStorage.setItem('just_logged_in', 'true');
         setShowSuccessModal(true);
+        setTimeout(() => {
+            navigate('/Profile');
+        }, 100);
     };
 
     const handleModalClose = () => {
         setShowSuccessModal(false);
-        navigate('/Profile');
     };
     //Обработка отправки формы
 
@@ -41,7 +44,7 @@ export const LoginPage = () => {
                             <Link to="/">
                                 <img
                                     src={exit}
-                                    alt="Логотип"
+                                    alt="Крестик"
                                     className="login__container-btn"
                                 />
                             </Link>
