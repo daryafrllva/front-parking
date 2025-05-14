@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import ModelViewer from './test';
+import { Link } from 'react-router-dom';
 import Car from '../assets/png/car.png';
 
 function HomePage() {
@@ -64,6 +65,7 @@ function HomePage() {
                 onMouseMove={handleMouseMove}
                 />
             </div>
+
             <div className="home__btn-container">
                 <button className="home__btn" onClick={handleButtonClick}>Забронировать парковочное место</button>
             </div>
