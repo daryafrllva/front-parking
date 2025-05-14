@@ -7,7 +7,8 @@ import { LoginPage } from './pages/LoginPages/LoginPage';
 import { EnterEmail } from './components/authorization/EnterEmail';
 import Profile from './pages/Profile';
 import {CodeEmail} from './components/authorization/CodeEmail';
-
+import {RegistrationPage} from './pages/RegistrationPage';
+import ParkingReservations from './components/ParkingReservations';
 
 function App() {
     return (
@@ -19,6 +20,12 @@ function App() {
                 <Route path="/Enter-email" element={<EnterEmail />} />
                 <Route path="/Profile" element={<Profile />} />
                 <Route path="/code-email" element={<CodeEmail />} />
+                <Route path="/registration" element={<RegistrationPage />} />
+                <Route path="/parking-reservations" element={
+                    //потом сделать защищённым, чтобы был доступен только после регестрации
+                        <ParkingReservations />
+
+                } />
             </Routes>
             <Footer />
         </Router>

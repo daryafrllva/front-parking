@@ -1,0 +1,133 @@
+@white: #ffffff;
+@black: #000000;
+@bold: 'Montserrat', sans-serif;
+@import "../global/variables.less";
+
+.parking-reservations {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  background: radial-gradient(ellipse at top left, #FFFFFF, #B39DFE, #D9CEFF, transparent 83%);
+
+  &__container {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  &__title {
+    color: @black;
+    font-family: @bold;
+    font-size: 24px;
+    margin-bottom: 30px;
+    text-align: center;
+  }
+
+  &__form {
+    background: @white;
+    padding: 40px;
+    border-radius: 50px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    &-group {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      width: 100%;
+      align-items: center;
+    }
+  }
+}
+
+.input-group {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  label {
+    font-family: @bold;
+    font-size: 14px;
+    text-align: left;
+  }
+
+  input {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+.spots-input {
+  .spots-counter {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    button {
+      width: 30px;
+      height: 30px;
+      border: 1px solid #ddd;
+      background: #f5f5f5;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    input {
+      width: 50px;
+      text-align: center;
+      padding: 5px;
+    }
+  }
+}
+
+.submit-btn {
+  margin-top: 20px;
+  padding: 12px 30px;
+  background: @gray;
+  color: @white;
+  border: none;
+  border-radius: 30px;
+  font-family: @bold;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    opacity: 0.9;
+  }
+}
+
+@media (max-width: 768px) {
+  .parking-reservations {
+    padding: 15px;
+
+    &__form {
+      padding: 30px 20px;
+      border-radius: 30px;
+    }
+
+    &__title {
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+  }
+}

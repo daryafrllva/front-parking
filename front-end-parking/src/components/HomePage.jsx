@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import ModelViewer from './test';
 import Car from '../assets/png/car.png';
 
 function HomePage() {
     const [isLoading, setIsLoading] = React.useState(true);
     const [style, setStyle] = React.useState({});
+    const navigate = useNavigate();
 
     useEffect(() => {
         const timer = setTimeout(() => setIsLoading(false), 3000);
@@ -15,7 +16,7 @@ function HomePage() {
     const handleMouseMove = (e) => {
         const rect = e.target.getBoundingClientRect();
         const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top; 
+        const y = e.clientY - rect.top;
         const centerX = rect.width / 2;
         const centerY = rect.height / 2;
 
@@ -39,6 +40,11 @@ function HomePage() {
             transition: 'transform 0.3s ease-out, box-shadow 0.3s ease-out',
         });
     };
+
+    const handleButtonClick = () => {
+        navigate('/parking-reservations');
+    };
+
     return (
         <>
         {isLoading && (
@@ -59,7 +65,7 @@ function HomePage() {
                 />
             </div>
             <div className="home__btn-container">
-                <button className="home__btn" onClick={() => alert('Парковки нет пока!')}>Забронировать парковочное место</button>
+                <button className="home__btn" onClick={handleButtonClick}>Забронировать парковочное место</button>
             </div>
         </div></>
     );
