@@ -9,6 +9,7 @@ import Profile from './pages/Profile';
 import {CodeEmail} from './components/authorization/CodeEmail';
 import {RegistrationPage} from './pages/RegistrationPage';
 import ParkingReservations from './components/ParkingReservations';
+import ReservantStatus from './components/ReservantStatus';
 
 function App() {
     return (
@@ -26,6 +27,12 @@ function App() {
                         <ParkingReservations />
 
                 } />
+                                <Route path="/parking-status" element={
+                    //потом сделать защищённым, чтобы был доступен только после регестрации
+                        <ReservantStatus />
+
+                } />
+                
             </Routes>
             <Footer />
         </Router>

@@ -1,0 +1,115 @@
+.home__status-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  min-height: 300px;
+  width: 100vw;
+  text-align: center;
+  font-family: 'Arial Black', Arial, sans-serif;
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #222;
+  transition: background 1s cubic-bezier(.77,0,.18,1);
+  position: relative;
+  overflow: hidden;
+}
+
+.status-text {
+  display: inline-block;
+  background: rgba(255,255,255,0.7);
+  padding: 32px 48px;
+  border-radius: 32px;
+  box-shadow: 0 8px 32px 0 rgba(60,60,60,0.10);
+}
+
+.status-text__dynamic {
+  display: inline-block;
+  margin-left: 12px;
+  padding: 0 8px;
+  border-bottom: 3px solid #ffe066;
+  font-size: 2.7rem;
+  font-weight: 900;
+  transition: color 0.5s, border-color 0.5s;
+  position: relative;
+  z-index: 1;
+  background: none;
+  color: #bfa600; 
+}
+
+.status--reserved .status-text__dynamic {
+  color: #bfa600;
+  border-color: #ffe066;
+}
+.status--confirmed .status-text__dynamic {
+  color: #1e7f3c;
+  border-color: #43e97b;
+}
+.status--occupied .status-text__dynamic {
+  color: #a259ff;
+  border-color: #a259ff;
+}
+
+
+@keyframes yellowGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+@keyframes greenGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+@keyframes violetWhiteStatic {
+  0%, 100% { background-position: 40% 60%; }
+  20% { background-position: 60% 40%; }
+  40% { background-position: 50% 50%; }
+  60% { background-position: 45% 55%; }
+  80% { background-position: 55% 45%; }
+}
+
+.status--reserved {
+  background: linear-gradient(120deg, #ffe066, #fffbe0, #ffec80, #ffe066 80%);
+  background-size: 200% 200%;
+  animation: yellowGradient 8s ease-in-out infinite;
+}
+.status--reserved .status-text__dynamic {
+  color: #bfa600;
+  border-color: #ffe066;
+  background: linear-gradient(90deg, #ffe066 60%, #fffbe0 100%);
+  background-size: 200% 200%;
+  animation: yellowGradient 6s ease-in-out infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.status--confirmed {
+  background: linear-gradient(120deg, #43e97b 0%, #38f9d7 100%, #43e97b 80%);
+  background-size: 200% 200%;
+  animation: greenGradient 8s ease-in-out infinite;
+}
+.status--confirmed .status-text__dynamic {
+  color: #1e7f3c;
+  border-color: #43e97b;
+  background: linear-gradient(90deg, #43e97b 60%, #38f9d7 100%);
+  background-size: 200% 200%;
+  animation: greenGradient 6s ease-in-out infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.status--occupied {
+  background: linear-gradient(120deg, #a259ff 40%, #fff 60%, #b993d6 80%, #fff 100%);
+  background-size: 200% 200%;
+  animation: violetWhiteStatic 12s ease-in-out infinite;
+}
+.status--occupied .status-text__dynamic {
+  color: #a259ff;
+  border-color: #a259ff;
+  background: linear-gradient(90deg, #a259ff 60%, #fff 100%, #b993d6 80%);
+  background-size: 200% 200%;
+  animation: violetWhiteStatic 10s ease-in-out infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
