@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import '../styles/blocks/ParkingReservations.less';
 
 const ParkingReservations = () => {
+    const navigate = useNavigate();
     const [parkingSpots, setParkingSpots] = useState(1);
 
     const handleIncrement = () => {
@@ -12,6 +14,9 @@ const ParkingReservations = () => {
         if (parkingSpots > 1) {
             setParkingSpots(prev => prev - 1);
         }
+    };
+    const handleButtonClick = () => {
+        navigate("/parking-status");
     };
 
     return (
@@ -73,7 +78,7 @@ const ParkingReservations = () => {
                             />
                         </div>
 
-                        <button className="submit-btn">Забронировать</button>
+                        <button className="submit-btn" onClick={handleButtonClick}>Забронировать</button>
                     </div>
                 </div>
             </div>
