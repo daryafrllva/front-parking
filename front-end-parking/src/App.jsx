@@ -10,6 +10,7 @@ import {CodeEmail} from './components/authorization/CodeEmail';
 import {RegistrationPage} from './pages/RegistrationPage';
 import ParkingReservations from './components/ParkingReservations';
 import ReservantStatus from './components/ReservantStatus';
+import ParkingPage from './pages/Parking';
 
 function App() {
     return (
@@ -22,6 +23,7 @@ function App() {
                 <Route path="/Profile" element={<Profile />} />
                 <Route path="/code-email" element={<CodeEmail />} />
                 <Route path="/registration" element={<RegistrationPage />} />
+                <Route path="/parking" element={<ParkingPage />} />
                 <Route path="/parking-reservations" element={
                     //потом сделать защищённым, чтобы был доступен только после регестрации
                         <ParkingReservations />
