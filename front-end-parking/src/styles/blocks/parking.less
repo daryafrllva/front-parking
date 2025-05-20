@@ -37,7 +37,7 @@
 .parking-spots-grid {
   position: absolute;
   top: 0;
-  left: 50%;
+  left: 607px;
   transform: translateX(-50%);
   width: 850px;                // фиксируем ширину grid как у картинки!
   height: 500px;               // фиксируем высоту grid как у картинки!
@@ -70,18 +70,45 @@
     inset 0 10px 18px -8px #bbb; /* внутренняя тень сверху */
 }
 
-.parking-spot--selected {
+.parking-spot--free {
   background: #ffe066;
-  border-color: #ffe066;
   color: #222;
-  box-shadow: 0 0 0 3px #ffe06655;
 }
-
 .parking-spot--occupied {
-  background: #ff5c5c;
-  border-color: #b22222;
+  background: #8D8D8D;
+  border-color: #8D8D8D;
   color: #fff;
 }
+.parking-spot--disabled {
+  background: #fff;
+  border-color: #e0e0e0;
+  color: #222;
+  cursor: default;
+}
+.parking-spot--reserved {
+  background: #ff5c5c;
+  border-color: #ff5c5c;
+  color: #fff;
+}
+.legend-dot--reserved {
+  background: #ff5c5c !important;
+  border-color: #ff5c5c;
+}
+
+.parking-spot--selected {
+  box-shadow: 0 0 16px 4px #ff980099, 0 4px 16px 0 #ff980055;
+  border-color: #ffe066;
+  background: #ffe066;
+  color: #222;
+  z-index: 2;
+  transform: translateY(-6px) scale(1.06);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.legend-dot--selected {
+  background: #ED0C0C;
+  border-color: #ED0C0C;
+}
+
 
 .parking-spot:hover {
   box-shadow: 0 0 0 3px #a259ff33;
@@ -241,28 +268,137 @@
 .parking-modal {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.25);
+  background: rgba(0,0,0,0.10);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
 }
+
 .parking-modal__content {
+  font-family: @regular;
   background: #fff;
-  border-radius: 18px;
-  padding: 32px 40px;
-  min-width: 320px;
-  min-height: 120px;
+  border-radius: 24px;
+  padding: 56px 40px 40px 40px; // увеличено сверху и по бокам
+  min-width: 420px;             // увеличено
+  min-height: 280px;            // увеличено
   position: relative;
-  box-shadow: 0 8px 32px 0 rgba(60,60,60,0.15);
+  box-shadow: 0 8px 32px 0 rgba(60,60,60,0.18);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: modalPop 0.2s;
 }
+@keyframes modalPop {
+  0% { transform: scale(0.97); opacity: 0.7; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
 .parking-modal__close {
   position: absolute;
-  top: 12px;
-  right: 18px;
-  background: none;
+  top: 20px;      // выше
+  right: 18px;   // чуть левее, чтобы не упирался в край
+  background: #f5f5f5;
   border: none;
-  font-size: 28px;
-  color: #888;
+  font-size: 32px; // увеличено
+  color: #aaa;
   cursor: pointer;
+  border-radius: 50%;
+  width: 44px;     // увеличено
+  height: 44px;    // увеличено
+  box-shadow: 0 2px 8px #0001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+.parking-modal__close:hover {
+  background: #ececec;
+  color: #888;
+}
+
+.parking-modal__title {
+  font-family: @regular;
+  font-size: 20px;
+  font-weight: 500;
+  text-align: center;
+  margin-bottom: 18px;
+  color: #444;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 10px;
+  //width: 70%;              // ограничиваем ширину подчеркивания
+  min-width: 300px;
+  max-width: 350px;
+  margin-left: auto;
+  margin-right: auto;
+  letter-spacing: 0.01em;
+}
+
+.parking-modal__warn {
+  background: #555;
+  color: #fff;
+  border-radius: 24px;
+  padding: 22px 18px;
+  font-size: 19px;
+  font-weight: 500;
+  text-align: center;
+  margin: 0 auto 28px auto;
+  max-width: 350px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  box-shadow: 0 2px 16px #0002;
+}
+
+.parking-modal__warn-icon {
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1;
+  color: #fff;
+  opacity: 0.85;
+}
+
+.parking-modal__warn-text {
+  flex: 1;
+  font-size: 18px;
+  font-weight: 400;
+  color: #fff;
+  text-align: center;
+  line-height: 1.3;
+}
+
+.parking-modal__btn {
+    font-family: @regular;
+  background: #ffe066;
+  color: #222;
+  border: none;
+  border-radius: 20px;
+  font-size: 21px;
+  font-weight: 500;
+  padding: 16px 0;
+  width: 70%;
+  margin: 0 0 16px 0;
+  box-shadow: 0 2px 8px #ffe06655;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.parking-modal__btn:hover {
+  background: #ffd600;
+}
+
+.parking-modal__support {
+    font-family: @regular;
+  display: block;
+  text-align: center;
+  font-size: 16px;
+  margin-top: 0;
+  color: #a59cff;
+  text-decoration: underline;
+  cursor: pointer;
+  width: 100%;
+  transition: color 0.15s;
+}
+.parking-modal__support:hover {
+  color: #6a11cb;
 }
