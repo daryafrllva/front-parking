@@ -17,7 +17,7 @@ function Header() {
                 className='page-header__logo'
                 />
               </Link>
-              <Link to="/login" className="page-header__join-btn">
+              <Link to="/registration" className="page-header__join-btn">
                   <span className="page-header__join-btn-text">Войти</span>
               </Link>
           </div>

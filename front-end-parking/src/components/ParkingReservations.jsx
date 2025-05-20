@@ -22,9 +22,10 @@ const ParkingReservations = () => {
     return (
         <div className="parking-reservations">
             <div className="parking-reservations__container">
-                <h1 className="parking-reservations__title">Бронирование парковки</h1>
 
                 <div className="parking-reservations__form">
+                    <h1 className="parking-reservations__title">Бронирование парковки</h1>
+
                     <div className="parking-reservations__form-group">
                         <div className="input-group">
                             <label>Имя</label>
@@ -53,14 +54,14 @@ const ParkingReservations = () => {
                         <div className="input-group spots-input">
                             <label>Кол-во парковочных мест</label>
                             <div className="spots-counter">
-                                <button onClick={handleDecrement}>-</button>
+                                <button className='spots-counter__btn' onClick={handleDecrement}>-</button>
                                 <input
                                     type="number"
                                     value={parkingSpots}
                                     min="1"
                                     readOnly
                                 />
-                                <button onClick={handleIncrement}>+</button>
+                                <button className='spots-counter__btn' onClick={handleIncrement}>+</button>
                             </div>
                         </div>
 

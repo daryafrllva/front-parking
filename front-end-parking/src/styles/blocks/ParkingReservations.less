@@ -7,24 +7,16 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  padding: 20px;
+  min-height: calc(100vh - 80px);
+  padding: 40px 20px 20px;
+  margin-top: 80px;
   background: radial-gradient(ellipse at top left, #FFFFFF, #B39DFE, #D9CEFF, transparent 83%);
 
   &__container {
     width: 100%;
-    max-width: 1200px;
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
-  }
-
-  &__title {
-    color: @black;
-    font-family: @bold;
-    font-size: 24px;
-    margin-bottom: 30px;
-    text-align: center;
   }
 
   &__form {
@@ -35,18 +27,28 @@
     max-width: 400px;
     text-align: center;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
 
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 30px;
 
     &-group {
       display: flex;
       flex-direction: column;
       gap: 20px;
       width: 100%;
-      align-items: center;
     }
+  }
+
+  &__title {
+    color: @black;
+    font-family: @bold;
+    font-size: 28px;
+    margin: 0;
+    text-align: center;
+    width: 100%;
   }
 }
 
@@ -71,36 +73,53 @@
     box-sizing: border-box;
   }
 }
-
 .spots-input {
   .spots-counter {
     display: flex;
     align-items: center;
     gap: 10px;
+    justify-content: center;
 
-    button {
-      width: 30px;
-      height: 30px;
-      border: 1px solid #ddd;
-      background: #f5f5f5;
-      border-radius: 4px;
-      cursor: pointer;
+    &__btn {
+      padding: 6px 12px;
+      background: @gray;
+      color: @white;
+      border: none;
+      border-radius: 30px;
+      font-family: @bold;
       font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: auto;
+      min-width: 30px;
+      height: 30px;
       display: flex;
       align-items: center;
       justify-content: center;
+
+      &:hover {
+        opacity: 0.9;
+        transform: scale(1.05);
+      }
+
+      &:active {
+        transform: scale(0.95);
+      }
     }
 
     input {
       width: 50px;
       text-align: center;
       padding: 5px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
     }
   }
 }
 
+
 .submit-btn {
-  margin-top: 20px;
+  margin-top: 10px;
   padding: 12px 30px;
   background: @gray;
   color: @white;
@@ -110,6 +129,7 @@
   font-size: 16px;
   cursor: pointer;
   transition: all 0.3s ease;
+  width: 100%;
 
   &:hover {
     opacity: 0.9;
@@ -123,11 +143,24 @@
     &__form {
       padding: 30px 20px;
       border-radius: 30px;
+      gap: 20px;
     }
 
     &__title {
+      font-size: 22px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .parking-reservations {
+    &__title {
       font-size: 20px;
-      margin-bottom: 20px;
+    }
+
+    &__form {
+      padding: 25px 15px;
+      border-radius: 20px;
     }
   }
 }
