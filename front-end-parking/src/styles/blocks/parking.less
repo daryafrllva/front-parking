@@ -1,59 +1,120 @@
-.parking-map-grid {
-  display: grid;
-  grid-template-columns: repeat(18, 48px); // подгони под количество мест в ряду
-  grid-auto-rows: 110px;
-  gap: 18px;
-  background: none;
-  border-radius: 16px;
+.parking-map-container {
+  position: relative;
+  width: 1200px; // увеличено, например
+  height: 600px;
   margin: 0 auto;
-  box-shadow: none;
-  padding: 0; // убираем паддинг!
-  justify-content: center;
+  display: flex;
+  justify-content: center; // чтобы картинка была по центру контейнера
+  align-items: center;
 }
+
+.container-text {
+  font-family: @regular;
+  font-size: 23px;
+  font-weight: 600;
+  color: #222;
+  text-align: center;
+  margin-bottom: 18px;
+  letter-spacing: 0.5px;
+  padding-bottom: 4px;
+  width: 100%;
+  background: none;
+  border-bottom: 3px solid #bdbdbd;
+  max-width: 340px;      
+  margin-left: auto;     
+  margin-right: auto;    
+}
+
+.parking-map-img {
+  display: block;
+  width: 900px;    // ширина картинки фиксирована
+  height: 600px;   // высота картинки фиксирована
+  object-fit: contain;
+  position: relative;
+  margin: 0 auto;
+}
+
+.parking-spots-grid {
+  position: absolute;
+  top: 0;
+  left: 607px;
+  transform: translateX(-50%);
+  width: 850px;                // фиксируем ширину grid как у картинки!
+  height: 500px;               // фиксируем высоту grid как у картинки!
+  display: grid;
+  grid-template-columns: repeat(14, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 15px; /* одинаковое расстояние между всеми spot */
+  padding-top: 55px;                  // убираем padding, чтобы сетка совпадала с картинкой
+}
+
 .parking-spot {
-  width: 44px;
-  height: 99px;
-  background: #fff;
+  font-family: @regular;
+  width: 29px;
+  height: 65px;
+  background: rgba(255, 255, 255, 0.9);
   border: 2px solid #e0e0e0;
-  border-radius: 24px;
+  border-radius: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 500;
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   color: #444;
   cursor: pointer;
-  transition: 
-    background 0.2s, 
-    border 0.2s, 
-    color 0.2s, 
-    box-shadow 0.2s;
-  box-shadow: 0 2px 8px 0 rgba(60,60,60,0.07);
+  transition: all 0.2s;
   margin: 0 auto;
   user-select: none;
+  box-shadow:
+    0 2px 6px rgba(0,0,0,0.1), /* внешняя тень */
+    inset 0 10px 18px -8px #bbb; /* внутренняя тень сверху */
+}
 
-    box-shadow:
-    0 2px 12px 0 rgba(60,60,60,0.10),
-    0 0 16px 0 #e0e0e0 inset;
+.parking-spot--free {
+  background: #ffe066;
+  color: #222;
+}
+.parking-spot--occupied {
+  background: #8D8D8D;
+  border-color: #8D8D8D;
+  color: #fff;
+}
+.parking-spot--disabled {
+  background: #fff;
+  border-color: #e0e0e0;
+  color: #222;
+  cursor: default;
+}
+.parking-spot--reserved {
+  background: #ff5c5c;
+  border-color: #ff5c5c;
+  color: #fff;
+}
+.legend-dot--reserved {
+  background: #ff5c5c !important;
+  border-color: #ff5c5c;
 }
 
 .parking-spot--selected {
-  background: #ffe066;
+  box-shadow: 0 0 16px 4px #ff980099, 0 4px 16px 0 #ff980055;
   border-color: #ffe066;
+  background: #ffe066;
   color: #222;
-  box-shadow: 0 0 0 3px #ffe06655;
+  z-index: 2;
+  transform: translateY(-6px) scale(1.06);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.legend-dot--selected {
+  background: #ED0C0C;
+  border-color: #ED0C0C;
 }
 
-.parking-spot--occupied {
-  background: #ff5c5c;
-  border-color: #b22222;
-  color: #fff;
-}
 
 .parking-spot:hover {
   box-shadow: 0 0 0 3px #a259ff33;
   border-color: #a259ff;
 }
+
 .parking-page-bg {
   min-height: 100vh;
   width: 100vw;
@@ -79,14 +140,265 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* убираем min-width и max-width, чтобы контейнер подстраивался */
   width: fit-content;
   margin: 100px auto;
 }
 
-.parking-map-grid {
-  margin: 0 auto;
+.level-switcher {
+  position: absolute;
+  top: -48px;                // на уровень с container-text
+  left: 0;               // к левому краю контейнера
+  transform: none;       // убираем центрирование
+  background: #555;
+  color: #fff;
+  border-radius: 20px;
+  padding: 8px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 3;
+  min-width: 70px;
+  font-size: 15px;
+  box-shadow: 0 2px 8px #0001;
+  font-family: @bold;
+}
+.level-label {
+  font-size: 15px;
+  margin: 2px 0;
+  font-family: @bold;
+  text-align: center;
+}
+
+.level-arrow {
   background: none;
-  box-shadow: none;
+  border: none;
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
   padding: 0;
+  line-height: 1;
+  user-select: none;
+  transition: color 0.2s;
+}
+.level-arrow:disabled {
+  color: #888;
+  cursor: default;
+}
+
+.parking-bottom-block {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 32px;
+  margin: 32px 0 0 0;
+}
+
+.parking-bottom-left {
+  flex: 1 1 0;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.parking-legend {
+  font-family: @regular;
+  display: flex;
+  flex-direction: column; // элементы в столбик
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 14px;
+  color: #888;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 2px;
+  border: 1.5px solid #ccc;
+  background: #fff;
+}
+.legend-dot--free { background: #ffe066; border-color: #ffe066; }
+.legend-dot--occupied { background: #555; border-color: #555; }
+.legend-dot--disabled { background: #fff; border-color: #ccc; }
+
+.legend-img {
+  width: 70px;
+  height: 30px;
+  object-fit: contain;
+  margin-right: 4px;
+}
+
+.parking-select-btn {
+  background: #ffe066;
+  color: #222;
+  border: none;
+  border-radius: 24px;
+  font-size: 20px;
+  font-weight: 600;
+  padding: 12px 48px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px #0001;
+  transition: background 0.2s;
+  margin: 0 32px;
+  font-family: @regular;
+}
+.parking-select-btn:hover {
+  background: #ffd600;
+}
+
+.parking-support-link {
+  font-family: @regular;
+  display: block;
+  text-align: center;
+  margin: 16px auto 0 auto;
+  color: #a59cff;
+  font-size: 17px;
+  text-decoration: underline;
+  cursor: pointer;
+  width: fit-content;
+}
+
+.parking-modal {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.10);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.parking-modal__content {
+  font-family: @regular;
+  background: #fff;
+  border-radius: 24px;
+  padding: 56px 40px 40px 40px; // увеличено сверху и по бокам
+  min-width: 420px;             // увеличено
+  min-height: 280px;            // увеличено
+  position: relative;
+  box-shadow: 0 8px 32px 0 rgba(60,60,60,0.18);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: modalPop 0.2s;
+}
+@keyframes modalPop {
+  0% { transform: scale(0.97); opacity: 0.7; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.parking-modal__close {
+  position: absolute;
+  top: 20px;      // выше
+  right: 18px;   // чуть левее, чтобы не упирался в край
+  background: #f5f5f5;
+  border: none;
+  font-size: 32px; // увеличено
+  color: #aaa;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 44px;     // увеличено
+  height: 44px;    // увеличено
+  box-shadow: 0 2px 8px #0001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+.parking-modal__close:hover {
+  background: #ececec;
+  color: #888;
+}
+
+.parking-modal__title {
+  font-family: @regular;
+  font-size: 20px;
+  font-weight: 500;
+  text-align: center;
+  margin-bottom: 18px;
+  color: #444;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 10px;
+  //width: 70%;              // ограничиваем ширину подчеркивания
+  min-width: 300px;
+  max-width: 350px;
+  margin-left: auto;
+  margin-right: auto;
+  letter-spacing: 0.01em;
+}
+
+.parking-modal__warn {
+  background: #555;
+  color: #fff;
+  border-radius: 24px;
+  padding: 22px 18px;
+  font-size: 19px;
+  font-weight: 500;
+  text-align: center;
+  margin: 0 auto 28px auto;
+  max-width: 350px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  box-shadow: 0 2px 16px #0002;
+}
+
+.parking-modal__warn-icon {
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1;
+  color: #fff;
+  opacity: 0.85;
+}
+
+.parking-modal__warn-text {
+  flex: 1;
+  font-size: 18px;
+  font-weight: 400;
+  color: #fff;
+  text-align: center;
+  line-height: 1.3;
+}
+
+.parking-modal__btn {
+    font-family: @regular;
+  background: #ffe066;
+  color: #222;
+  border: none;
+  border-radius: 20px;
+  font-size: 21px;
+  font-weight: 500;
+  padding: 16px 0;
+  width: 70%;
+  margin: 0 0 16px 0;
+  box-shadow: 0 2px 8px #ffe06655;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.parking-modal__btn:hover {
+  background: #ffd600;
+}
+
+.parking-modal__support {
+    font-family: @regular;
+  display: block;
+  text-align: center;
+  font-size: 16px;
+  margin-top: 0;
+  color: #a59cff;
+  text-decoration: underline;
+  cursor: pointer;
+  width: 100%;
+  transition: color 0.15s;
+}
+.parking-modal__support:hover {
+  color: #6a11cb;
 }
