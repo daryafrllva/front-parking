@@ -1,0 +1,92 @@
+.parking-map-grid {
+  display: grid;
+  grid-template-columns: repeat(18, 48px); // подгони под количество мест в ряду
+  grid-auto-rows: 110px;
+  gap: 18px;
+  background: none;
+  border-radius: 16px;
+  margin: 0 auto;
+  box-shadow: none;
+  padding: 0; // убираем паддинг!
+  justify-content: center;
+}
+.parking-spot {
+  width: 44px;
+  height: 99px;
+  background: #fff;
+  border: 2px solid #e0e0e0;
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  font-size: 1.1rem;
+  color: #444;
+  cursor: pointer;
+  transition: 
+    background 0.2s, 
+    border 0.2s, 
+    color 0.2s, 
+    box-shadow 0.2s;
+  box-shadow: 0 2px 8px 0 rgba(60,60,60,0.07);
+  margin: 0 auto;
+  user-select: none;
+
+    box-shadow:
+    0 2px 12px 0 rgba(60,60,60,0.10),
+    0 0 16px 0 #e0e0e0 inset;
+}
+
+.parking-spot--selected {
+  background: #ffe066;
+  border-color: #ffe066;
+  color: #222;
+  box-shadow: 0 0 0 3px #ffe06655;
+}
+
+.parking-spot--occupied {
+  background: #ff5c5c;
+  border-color: #b22222;
+  color: #fff;
+}
+
+.parking-spot:hover {
+  box-shadow: 0 0 0 3px #a259ff33;
+  border-color: #a259ff;
+}
+.parking-page-bg {
+  min-height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #a259ff, #ffe066, #6a11cb, #b993d6, #8f5cff, #ffe066, #a259ff);
+  background-size: 400% 400%;
+  animation: gradientBG 36s ease-in-out infinite;
+}
+
+@keyframes gradientBG {
+  0% { background-position: 0% 0%; }
+  50% { background-position: 100% 100%; }
+  100% { background-position: 0% 0%; }
+}
+
+.parking-page__container {
+  background: #fff;
+  border-radius: 24px;
+  box-shadow: 0 8px 32px 0 rgba(60,60,60,0.10);
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* убираем min-width и max-width, чтобы контейнер подстраивался */
+  width: fit-content;
+  margin: 100px auto;
+}
+
+.parking-map-grid {
+  margin: 0 auto;
+  background: none;
+  box-shadow: none;
+  padding: 0;
+}
