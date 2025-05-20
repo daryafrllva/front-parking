@@ -1,0 +1,125 @@
+@import "../global/variables.less";
+
+.code-email-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: radial-gradient(ellipse at top left, #FFFFFF, #B39DFE, #D9CEFF, transparent 83%);
+}
+
+.code-email-container {
+  width: 100%;
+  max-width: 400px;
+  padding: 0 20px;
+}
+
+.code-email-form {
+  background: @white;
+  padding: 40px;
+  border-radius: 50px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.code-email-title {
+  color: @black;
+  margin-bottom: 30px;
+  font-size: 24px;
+  font-family: @bold;
+  text-align: center;
+}
+
+.code-input-wrapper {
+  margin-bottom: 20px;
+}
+
+.code-input {
+  width: 100%;
+  max-width: 344px;
+  height: 57px;
+  padding: 12px 20px;
+  border: 1px solid #ddd;
+  border-radius: 25px;
+  font-size: 16px;
+  box-sizing: border-box;
+  box-shadow: inset 6px 6px 20px 0px rgba(0, 0, 0, 0.11),
+  inset 7px 7px 25px 0px rgba(0, 0, 0, 0.1);
+
+  &:focus {
+    outline: none;
+    border-color: @light_black;
+  }
+}
+
+.code-error {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+.submit-button {
+  width: 100%;
+  max-width: 200px;
+  height: 57px;
+  margin: 20px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: @bold;
+  cursor: pointer;
+  padding: 12px;
+  background-color: @yellow;
+  color: @black;
+  border: none;
+  border-radius: 25px;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: darken(@yellow, 10%);
+  }
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+}
+
+.resend-code-section {
+  margin-top: 20px;
+  font-size: 14px;
+  color: @black;
+  font-family: @regular;
+
+  span {
+    margin-right: 5px;
+  }
+}
+
+.resend-button {
+  background: none;
+  border: none;
+  color: @blue;
+  cursor: pointer;
+  font-family: @bold;
+  padding: 5px;
+  transition: color 0.2s ease;
+
+  &:hover {
+    text-decoration: underline;
+    color: darken(@blue, 10%);
+  }
+}
+
+@media (max-width: 480px) {
+  .code-email-form {
+    padding: 30px 20px;
+    border-radius: 30px;
+  }
+
+  .code-email-title {
+    font-size: 20px;
+  }
+}

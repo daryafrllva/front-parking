@@ -11,6 +11,8 @@ import {RegistrationPage} from './pages/RegistrationPage';
 import ParkingReservations from './components/ParkingReservations';
 import ReservantStatus from './components/ReservantStatus';
 import ParkingPage from './pages/Parking';
+import { CreatePasswordPage } from './components/authorization/CreatePasswordPage';
+import { ResetPasswordPage } from './components/authorization/ResetPasswordPage';
 
 function App() {
     return (
@@ -22,6 +24,8 @@ function App() {
                 <Route path="/Enter-email" element={<EnterEmail />} />
                 <Route path="/Profile" element={<Profile />} />
                 <Route path="/code-email" element={<CodeEmail />} />
+                <Route path="/create-password" element={<CreatePasswordPage />} />
+                <Route path="/reset-password" element={<ResetPasswordPage />} />
                 <Route path="/registration" element={<RegistrationPage />} />
                 <Route path="/parking" element={<ParkingPage />} />
                 <Route path="/parking-reservations" element={

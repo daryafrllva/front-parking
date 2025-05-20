@@ -1,87 +1,156 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../styles/blocks/ParkingReservations.less';
+import axios from 'axios';
 
 const ParkingReservations = () => {
     const navigate = useNavigate();
-    const [parkingSpots, setParkingSpots] = useState(1);
+    const [formData, setFormData] = useState({
+        lastName: '',
+        firstName: '',
+        middleName: '',
+        telegramId: '',
+        office: '',
+    });
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [error, setError] = useState('');
 
-    const handleIncrement = () => {
-        setParkingSpots(prev => prev + 1);
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
     };
 
-    const handleDecrement = () => {
-        if (parkingSpots > 1) {
-            setParkingSpots(prev => prev - 1);
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        setError('');
+
+        try {
+            const token = localStorage.getItem('token');
+
+            if (!token) {
+                setError('Требуется авторизация');
+                setIsSubmitting(false);
+                return;
+            }
+
+            const response = await axios.post(
+                'http://your-django-backend/api/reservations/',
+                formData,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+
+            if (response.status === 201) {
+                // Перенаправляем на страницу профиля с сохранением данных
+                navigate("/profile", {
+                    state: {
+                        userData: formData,
+                        reservationSuccess: true
+                    }
+                });
+            }
+        } catch (error) {
+            console.error('Ошибка при отправке данных:', error);
+            setError('Произошла ошибка при отправке данных. Пожалуйста, попробуйте снова.');
+        } finally {
+            setIsSubmitting(false);
         }
-    };
-    const handleButtonClick = () => {
-        navigate("/parking-status");
     };
 
     return (
         <div className="parking-reservations">
             <div className="parking-reservations__container">
+                <form className="parking-reservations__form" onSubmit={handleSubmit}>
+                    <h1 className="parking-reservations__title">Заполнение аккаунта</h1>
 
-                <div className="parking-reservations__form">
-                    <h1 className="parking-reservations__title">Бронирование парковки</h1>
+                    {error && (
+                        <div className="error-message">
+                            {error}
+                        </div>
+                    )}
 
                     <div className="parking-reservations__form-group">
+                        <div className="input-group">
+                            <label>Фамилия</label>
+                            <input
+                                type="text"
+                                name="lastName"
+                                placeholder="Иванов"
+                                value={formData.lastName}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+
                         <div className="input-group">
                             <label>Имя</label>
                             <input
                                 type="text"
-                                placeholder="Ваше имя"
+                                name="firstName"
+                                placeholder="Иван"
+                                value={formData.firstName}
+                                onChange={handleChange}
+                                required
                             />
                         </div>
 
                         <div className="input-group">
-                            <label>Email</label>
+                            <label>Отчество</label>
                             <input
-                                type="email"
-                                placeholder="Ваш email"
+                                type="text"
+                                name="middleName"
+                                placeholder="Иванович"
+                                value={formData.middleName}
+                                onChange={handleChange}
+                                required
                             />
                         </div>
 
                         <div className="input-group">
-                            <label>Телефон</label>
+                            <label>Telegram-ID</label>
                             <input
-                                type="tel"
-                                placeholder="+7(999)999-9999"
-                            />
-                        </div>
-
-                        <div className="input-group spots-input">
-                            <label>Кол-во парковочных мест</label>
-                            <div className="spots-counter">
-                                <button className='spots-counter__btn' onClick={handleDecrement}>-</button>
-                                <input
-                                    type="number"
-                                    value={parkingSpots}
-                                    min="1"
-                                    readOnly
-                                />
-                                <button className='spots-counter__btn' onClick={handleIncrement}>+</button>
-                            </div>
-                        </div>
-
-                        <div className="input-group">
-                            <label>Дата заезда</label>
-                            <input
-                                type="date"
+                                type="text"
+                                name="telegramId"
+                                placeholder="@username"
+                                value={formData.telegramId}
+                                onChange={handleChange}
+                                required
                             />
                         </div>
 
                         <div className="input-group">
-                            <label>Дата выезда</label>
-                            <input
-                                type="date"
-                            />
+                            <label>Офис</label>
+                            <select
+                                name="office"
+                                value={formData.office}
+                                onChange={handleChange}
+                                className="input-select"
+                                required
+                            >
+                                <option value="" disabled>Выберите офис</option>
+                                <option value="main">ул. Советская, 78, Томск</option>
+                                <option value="branch1">ул. Николаева, 11, Новосибирск</option>
+                                <option value="branch2">ул. Гагарина, 14 (этаж 5), Омск</option>
+                            </select>
                         </div>
 
-                        <button className="submit-btn" onClick={handleButtonClick}>Забронировать</button>
+                        <button
+                            type="submit"
+                            className="submit-btn"
+                            disabled={isSubmitting}
+                        >
+                            {isSubmitting ? 'Отправка...' : 'Отправить'}
+                        </button>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     );
