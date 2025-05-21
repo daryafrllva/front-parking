@@ -401,7 +401,7 @@ function ParkingPage() {
                 style={{ background: "#ffe066", color: "#222" }}
                 onClick={handleUnreserveSuccessClose}
               >
-                Отмена
+                Продолжить
               </button>
               <a
                 href="mailto:support@tbank.ru"
