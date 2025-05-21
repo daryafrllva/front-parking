@@ -1,44 +1,24 @@
-import React, { useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Car from '../assets/png/car.png';
 
 function HomePage() {
-    const [isLoading, setIsLoading] = React.useState(true);
-    const [style, setStyle] = React.useState({});
+    const [isLoading, setIsLoading] = useState(true);
+    const [showContent, setShowContent] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
         const timer = setTimeout(() => setIsLoading(false), 3000);
         return () => clearTimeout(timer);
-    })
+    }, []);
 
-    const handleMouseMove = (e) => {
-        const rect = e.target.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-
-        const rotateX = (y - centerY) / 20;
-        const rotateY = (centerX - x) / 20;
-
-        const shadowX = (centerX - x) / 10;
-        const shadowY = (centerY - y) / 10;
-
-        setStyle({
-            transform: `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
-            boxShadow: `${shadowX}px ${shadowY}px 20px rgba(0, 0, 0, 0.3)`,
-            transition: 'transform 0.1s ease-out, box-shadow 0.1s ease-out',
-        });
-    };
-
-    const handleMouseLeave = () => {
-        setStyle({
-            transform: 'rotateX(0deg) rotateY(0deg)',
-            boxShadow: '0px 8px 15px rgba(0, 0, 0, 0.2)',
-            transition: 'transform 0.3s ease-out, box-shadow 0.3s ease-out',
-        });
-    };
+    useEffect(() => {
+        if (!isLoading) {
+            // Показываем контент с анимацией после исчезновения лоадера
+            const showTimer = setTimeout(() => setShowContent(true), 100);
+            return () => clearTimeout(showTimer);
+        }
+    }, [isLoading]);
 
     const handleButtonClick = () => {
         navigate('/parking-reservations');
@@ -52,22 +32,31 @@ function HomePage() {
             </div>
         )}
         <div className={`home__container ${isLoading ? 'blured' : ''}`}>
-        {/* <ModelViewer /> */}
-            <div className="home__image_container">
-            <img 
-                src={Car}
-                alt="Машина"
-                className='home__image'
-                style={style}
-                onMouseLeave={handleMouseLeave}
-                onMouseMove={handleMouseMove}
+            <div className={`home__text-container${showContent ? ' home__text-container--visible' : ''}`}>
+                <h1 className='home__title'>С Т-Паркинг парковка — одно удовольствие!</h1>
+                <p className='home__subtitle'>Бронируй парковочное место заранее и забудь о поиске стоянки по утрам. С Т-Паркинг твоё место всегда ждёт тебя у офиса — быстро, удобно и без лишних хлопот</p>
+            </div>
+            <div className={`home__image_container${showContent ? ' home__image_container--visible' : ''}`} style={{ background: 'none', boxShadow: 'none', borderRadius: 0, padding: 0 }}>
+                <img 
+                    src={Car}
+                    alt="Машина"
+                    className='home__image'
+                    style={{
+                        height: 'auto',
+                        maxWidth: '95vw',
+                        maxHeight: '65vh',
+                        boxShadow: 'none',
+                        borderRadius: 0,
+                        objectFit: 'contain',
+                        background: 'none'
+                    }}
                 />
             </div>
-
-            <div className="home__btn-container">
+            <div className={`home__btn-container${showContent ? ' home__btn-container--visible' : ''}`}>
                 <button className="home__btn" onClick={handleButtonClick}>Забронировать парковочное место</button>
             </div>
-        </div></>
+        </div>
+        </>
     );
 }
 

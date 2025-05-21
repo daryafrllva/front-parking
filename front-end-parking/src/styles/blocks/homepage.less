@@ -13,9 +13,9 @@ html, body {
     align-items: center;
     justify-content: center;
     height: 100vh;
-    background: linear-gradient(135deg, #a259ff, #ffe066, #6a11cb, #b993d6, #8f5cff, #ffe066, #a259ff);
+    background: linear-gradient(135deg, #a259ff, #6a11cb, #b993d6, #8f5cff, #6a11cb, #a259ff);
     background-size: 400% 400%;
-    animation: gradientBG 36s ease-in-out infinite; // было 18s, стало 36s
+    animation: gradientBG 36s ease-in-out infinite;
     padding: 20px;
     box-sizing: border-box; 
   }
@@ -81,48 +81,141 @@ html, body {
     margin-top: 100px; 
   }
 
+  &__text-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 32px;
+    margin-top: 32px;
+    //background: rgba(255,255,255,0.65); // чуть более заметный фон
+    // box-shadow: 0 8px 32px 0 rgba(80, 0, 120, 0.25);
+    border-radius: 24px;
+    padding: 32px 32px 24px 32px;
+    backdrop-filter: blur(2px);
+    transition: box-shadow 0.3s, opacity 0.7s cubic-bezier(0.23,1,0.32,1), transform 0.7s cubic-bezier(0.23,1,0.32,1);
+    opacity: 0;
+    transform: translateY(-40px);
+    pointer-events: none;
+    &--visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+      transition-delay: 0.2s;
+    }
+  }
+
   &__image_container {
     display: flex;
     justify-content: center;
     align-items: center;
     margin-top: 50px;
     width: 100%;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.7s cubic-bezier(0.23,1,0.32,1), transform 0.7s cubic-bezier(0.23,1,0.32,1);
+    pointer-events: none;
+    &--visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+      transition-delay: 0.7s;
+    }
   }
 
   &__image {
-    width: 80%;
-    max-width: 600px;
+    max-width: 900px;
     border-radius: 60px;
     box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: none;
     transform-style: preserve-3d;
-
+    animation: carFloat 5s ease-in-out infinite;
     &:hover {
-      transform: scale(0.95);
+      transform: none;
       box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
     }
   }
 
+  @keyframes carFloat {
+    0%   { transform: translateY(0); }
+    50%  { transform: translateY(-18px); }
+    100% { transform: translateY(0); }
+  }
+
   &__btn-container {
+    font-family: @bold; 
     margin-top: 20px; 
     display: flex;
     justify-content: center;
     align-items: center;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.7s cubic-bezier(0.23,1,0.32,1), transform 0.7s cubic-bezier(0.23,1,0.32,1);
+    pointer-events: none;
+    &--visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+      transition-delay: 1s;
+    }
   }
 
   &__btn {
-    padding: 10px 20px;
+    padding: 18px 48px;
     font-size: 16px;
     background-color: @yellow; 
     color: @black; 
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
     font-family: @bold; 
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, box-shadow 0.3s;
+    box-shadow: 0 4px 16px 0 rgba(160, 120, 255, 0.10);
 
     &:hover {
-      background-color: #e4c526;
+      background-color: #f0cc1b;
+      box-shadow: 0 8px 24px 0 rgba(160, 120, 255, 0.18);
+    }
+  }
+
+  &__title,
+  &__subtitle {
+    opacity: 0;
+    animation: textFadeIn 0.8s ease forwards;
+  }
+
+  &__title {
+    margin-top: 50px;
+    font-family: @bold;
+    font-size: 38px;
+    font-weight: 700;
+    color: #FFF;
+    margin-bottom: 18px;
+    text-align: center;
+    line-height: 1.15;
+    letter-spacing: -0.5px;
+    animation-delay: 1s;
+  }
+
+  &__subtitle {
+    font-family: @regular;
+    font-size: 20px;
+    font-weight: 400;
+    color: #f5f3f3;
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto 0 auto;
+    line-height: 1.4;
+    animation-delay: 1.3s;
+  }
+
+  @keyframes textFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
     }
   }
 }
