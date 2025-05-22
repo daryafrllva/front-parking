@@ -1,7 +1,7 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import VhodModal from '../components/authorization/VhodModal';
-
+import exitIcon from '../assets/svg-sprite/exitAuth.svg';
 
 function Profile() {
     const navigate = useNavigate();
@@ -16,22 +16,27 @@ function Profile() {
     });
     const [reservationSuccess, setReservationSuccess] = useState(false);
 
-    // Получаем данные из location.state или localStorage
+    const officeNames = {
+        main: 'ул. Советская, 78, Томск',
+        branch1: 'ул. Николаева, 11, Новосибирск',
+        branch2: 'ул. Гагарина, 14 (этаж 5), Омск'
+    };
+
+    // Загрузка данных при монтировании
     useEffect(() => {
         const justLoggedIn = localStorage.getItem('just_logged_in');
         const savedUserData = localStorage.getItem('userData');
 
-        if (location.state) {
-            const { userData: stateUserData, reservationSuccess: stateReservationSuccess } = location.state;
-            if (stateUserData) {
-                setUserData(stateUserData);
-                localStorage.setItem('userData', JSON.stringify(stateUserData));
-            }
-            if (stateReservationSuccess) {
-                setReservationSuccess(true);
-            }
+        if (location.state?.userData) {
+            const userDataFromState = location.state.userData;
+            setUserData(userDataFromState);
+            localStorage.setItem('userData', JSON.stringify(userDataFromState));
         } else if (savedUserData) {
             setUserData(JSON.parse(savedUserData));
+        }
+
+        if (location.state?.reservationSuccess) {
+            setReservationSuccess(true);
         }
 
         if (justLoggedIn) {
@@ -52,18 +57,22 @@ function Profile() {
         navigate('/');
     };
 
-    const officeNames = {
-        main: 'ул. Советская, 78, Томск',
-        branch1: 'ул. Николаева, 11, Новосибирск',
-        branch2: 'ул. Гагарина, 14 (этаж 5), Омск'
+    const handleNavigateToParking = () => {
+        navigate('/parking');
     };
 
     return (
-        <div className="profile-page">
+        <div className="profile-page-bg">
             {showWelcomeModal && <VhodModal onClose={() => setShowWelcomeModal(false)} />}
 
-            <div className="profile-container">
-                <h1 className="profile-title">Профиль пользователя</h1>
+            <div className="profile-page__container">
+                <button className="profile-exit-btn" onClick={handleLogout}>
+                    <img src={exitIcon} alt="Выйти" />
+                </button>
+
+                <div className="profile-header">
+                    <p className="container-text">Профиль пользователя</p>
+                </div>
 
                 {reservationSuccess && (
                     <div className="success-message">
@@ -94,19 +103,28 @@ function Profile() {
 
                 <div className="profile-actions">
                     <button
-                        className="edit-profile-btn"
-                        onClick={() => navigate('/parking-reservations')}
+                        className="profile-action-btn profile-action-btn--primary"
+                        onClick={handleNavigateToParking}
                     >
-                        Редактировать данные
+                        Выбрать парковочное место
                     </button>
 
                     <button
-                        className="logout-btn"
-                        onClick={handleLogout}
+                        className="profile-action-btn profile-action-btn--secondary"
+                        onClick={() => navigate('/edit-profile')}
                     >
-                        Выйти из аккаунта
+                        Редактировать данные
                     </button>
                 </div>
+
+                <a
+                    href="mailto:support@tbank.ru"
+                    className="profile-support-link"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    Техподдержка
+                </a>
             </div>
         </div>
     );
