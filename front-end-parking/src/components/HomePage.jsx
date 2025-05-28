@@ -21,7 +21,7 @@ function HomePage() {
     }, [isLoading]);
 
     const handleButtonClick = () => {
-        navigate('/parking-reservations');
+        navigate('/parking');
     };
 
     return (

@@ -11,16 +11,12 @@ const LEVELS = [
 
 // СТАТУСЫ: free (желтый), occupied (черный), disabled (белый), reserved (красный), selected (оранжевый)
 function getSpots(levelLetter) {
-  // Массивы индексов для черных (занятых) и недоступных мест
-  const occupiedRow1 = [2, 5]; // например, 3 и 6 место в первом ряду (индексы с 0)
-  const occupiedRow2 = [1, 7]; // например, 2 и 8 место во втором ряду
-  const occupiedRow3 = [4];    // например, 5 место в третьем ряду
-  const occupiedRow4 = [10, 12]; // например, 11 и 13 место в четвертом ряду
-
-  const disabledRow1 = [11]; // например, 12 место в первом ряду
-
+  const occupiedRow1 = [2, 5];
+  const occupiedRow2 = [1, 7];
+  const occupiedRow3 = [4];
+  const occupiedRow4 = [10, 12];
+  const disabledRow1 = [11];
   return [
-    // 1 ряд: 14 мест
     ...Array.from({ length: 14 }, (_, i) => ({
       row: 1,
       col: i < 7 ? i + 1 : i + 3,
@@ -31,21 +27,18 @@ function getSpots(levelLetter) {
         ? 'disabled'
         : 'free'
     })),
-    // 2 ряд: 11 мест
     ...Array.from({ length: 11 }, (_, i) => ({
       row: 2,
       col: i + 3,
       name: `${levelLetter}${i + 15}`,
       status: occupiedRow2.includes(i) ? 'occupied' : 'disabled'
     })),
-    // 3 ряд: 11 мест (по умолчанию disabled, но один occupied)
     ...Array.from({ length: 11 }, (_, i) => ({
       row: 3,
       col: i + 3,
       name: `${levelLetter}${i + 26}`,
       status: occupiedRow3.includes(i) ? 'free' : 'disabled'
     })),
-    // 4 ряд: 14 мест (по умолчанию disabled, но два occupied)
     ...Array.from({ length: 14 }, (_, i) => ({
       row: 4,
       col: i < 2 ? i + 1 : i + 2,
@@ -54,7 +47,8 @@ function getSpots(levelLetter) {
     })),
   ];
 }
-function ParkingSpot({ name, status, row, col, onClick, isSelected }) {
+
+function ParkingSpot({ name, status, row, col, onClick, isSelected, reservedBy }) {
   return (
     <div
       className={`parking-spot parking-spot--${status}${isSelected ? ' parking-spot--selected' : ''}`}
@@ -62,7 +56,8 @@ function ParkingSpot({ name, status, row, col, onClick, isSelected }) {
         gridRow: row,
         gridColumn: col,
       }}
-      onClick={status === 'free' ? onClick : undefined}
+      onClick={onClick}
+      title={reservedBy ? `Забронировано для: ${reservedBy}` : undefined}
     >
       {name}
     </div>
@@ -92,21 +87,25 @@ function ParkingLevelSwitcher({ level, setLevel }) {
 }
 
 function ParkingPage() {
+  // --- User state ---
   const [selected, setSelected] = useState(null);
   const [level, setLevel] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
-  const [reserved, setReserved] = useState(() => {
-    return localStorage.getItem('reservedSpot') || null;
-  });
+  const [reserved, setReserved] = useState(() => localStorage.getItem('reservedSpot') || null);
   const [successModal, setSuccessModal] = useState(false);
-
-  // Новые состояния для снятия брони и режима просмотра
-    const [viewOnly, setViewOnly] = useState(() => {
-    const stored = localStorage.getItem('viewOnly');
-    return stored === 'true';
-  });
+  const [viewOnly, setViewOnly] = useState(() => localStorage.getItem('viewOnly') === 'true');
   const [unreserveConfirmModal, setUnreserveConfirmModal] = useState(false);
   const [unreserveSuccessModal, setUnreserveSuccessModal] = useState(false);
+
+  // --- Admin state ---
+  const [isAdmin, setIsAdmin] = useState(() => localStorage.getItem('isAdmin') === 'true');
+  const [adminModal, setAdminModal] = useState(false);
+  const [adminEmail, setAdminEmail] = useState('');
+  const [adminSelectedSpot, setAdminSelectedSpot] = useState(null);
+  const [adminReserved, setAdminReserved] = useState(() => {
+    const data = localStorage.getItem('adminReserved');
+    return data ? JSON.parse(data) : {};
+  });
 
   useEffect(() => {
     if (reserved) {
@@ -120,8 +119,22 @@ function ParkingPage() {
     localStorage.setItem('viewOnly', viewOnly);
   }, [viewOnly]);
 
-  // Места: если viewOnly, все кроме reserved — disabled
+  useEffect(() => {
+    localStorage.setItem('isAdmin', isAdmin);
+  }, [isAdmin]);
+
+  useEffect(() => {
+    localStorage.setItem('adminReserved', JSON.stringify(adminReserved));
+  }, [adminReserved]);
+
+  // --- Spots logic ---
   const spots = getSpots(LEVELS[level].letter).map(spot => {
+    if (isAdmin) {
+      if (adminReserved[spot.name]) {
+        return { ...spot, status: 'reserved', reservedBy: adminReserved[spot.name], isSelected: spot.name === adminSelectedSpot };
+      }
+      return { ...spot, isSelected: spot.name === adminSelectedSpot };
+    }
     if (viewOnly && spot.name !== reserved) {
       return { ...spot, status: 'disabled', isSelected: false };
     }
@@ -134,25 +147,23 @@ function ParkingPage() {
     return { ...spot, isSelected: false };
   });
 
+  // --- User handlers ---
   const handleReserve = () => {
     setReserved(selected);
     setModalOpen(false);
     setTimeout(() => setSuccessModal(true), 200);
   };
 
-  // После "Посмотреть" — только просмотр
   const handleSuccessClose = () => {
     setSuccessModal(false);
     setSelected(null);
     setViewOnly(true);
   };
 
-  // Открыть подтверждение снятия брони
   const handleUnreserveClick = () => {
     setUnreserveConfirmModal(true);
   };
 
-  // Снять бронь (после подтверждения)
   const handleUnreserve = () => {
     setUnreserveConfirmModal(false);
     setTimeout(() => {
@@ -161,18 +172,59 @@ function ParkingPage() {
     }, 200);
   };
 
-  // После успешного снятия брони — вернуть всё в начальное состояние
   const handleUnreserveSuccessClose = () => {
     setUnreserveSuccessModal(false);
     setViewOnly(false);
     setSelected(null);
   };
 
+  // --- Admin handlers ---
+  const handleAdminSpotClick = (spot) => {
+    setAdminSelectedSpot(spot.name);
+    setAdminEmail(adminReserved[spot.name] || '');
+    setAdminModal(true);
+  };
+
+  const handleAdminReserve = (e) => {
+    e.preventDefault();
+    if (adminEmail) {
+      setAdminReserved(prev => ({ ...prev, [adminSelectedSpot]: adminEmail }));
+      setAdminModal(false);
+      setAdminSelectedSpot(null);
+      setAdminEmail('');
+    }
+  };
+
+  const handleAdminUnreserve = () => {
+    setAdminReserved(prev => {
+      const copy = { ...prev };
+      delete copy[adminSelectedSpot];
+      return copy;
+    });
+    setAdminModal(false);
+    setAdminSelectedSpot(null);
+    setAdminEmail('');
+  };
+
   return (
     <div className="parking-page-bg">
       <div className="parking-page__container">
+        {/* Кнопка для входа/выхода из админки */}
+        <button
+          style={{ position: 'absolute', top: 10, right: 10, zIndex: 10 }}
+          onClick={() => {
+            setIsAdmin(v => {
+              localStorage.setItem('isAdmin', !v);
+              return !v;
+            });
+          }}
+        >
+          {isAdmin ? 'Выйти из админки' : 'Войти как админ'}
+        </button>
         <div style={{ width: '100%', textAlign: 'center', marginBottom: 16, fontWeight: 600, fontSize: 18 }}>
-          <p className='container-text'>Выберите парковочное место:</p>
+          <p className='parking-container-text'>
+            {isAdmin ? 'Админ: выберите место для управления' : 'Выберите парковочное место:'}
+          </p>
         </div>
         <div className="parking-map-container">
           <ParkingLevelSwitcher level={level} setLevel={setLevel} />
@@ -182,7 +234,13 @@ function ParkingPage() {
               <ParkingSpot
                 key={spot.name}
                 {...spot}
-                onClick={() => setSelected(spot.name)}
+                onClick={
+                  isAdmin
+                    ? () => handleAdminSpotClick(spot)
+                    : spot.status === 'free'
+                    ? () => setSelected(spot.name)
+                    : undefined
+                }
               />
             ))}
           </div>
@@ -191,7 +249,22 @@ function ParkingPage() {
         <div className="parking-bottom-block">
           <div className="parking-bottom-left">
             <div className="parking-legend">
-              {!viewOnly ? (
+              {isAdmin ? (
+                <>
+                  <div className="legend-item">
+                    <span className="legend-dot legend-dot--free" /> — свободное место
+                  </div>
+                  <div className="legend-item">
+                    <span className="legend-dot legend-dot--reserved" /> — забронировано (email)
+                  </div>
+                  <div className="legend-item">
+                    <span className="legend-dot legend-dot--occupied" /> — занятое место
+                  </div>
+                  <div className="legend-item">
+                    <span className="legend-dot legend-dot--disabled" /> — недоступно
+                  </div>
+                </>
+              ) : !viewOnly ? (
                 <>
                   <div className="legend-item">
                     <span className="legend-dot legend-dot--free" /> — свободное место Т-банка
@@ -215,7 +288,7 @@ function ParkingPage() {
               )}
             </div>
           </div>
-          {!viewOnly ? (
+          {!isAdmin && (!viewOnly ? (
             <button
               className="parking-select-btn"
               onClick={() => setModalOpen(true)}
@@ -231,7 +304,7 @@ function ParkingPage() {
             >
               Снять бронь
             </button>
-          )}
+          ))}
           <div className="parking-bottom-right">
             <div className="parking-legend">
               <div className="legend-item legend-item--road">
@@ -251,7 +324,7 @@ function ParkingPage() {
         >
           Техподдержка
         </a>
-        {/* Модальное окно подтверждения */}
+        {/* --- User модалки --- */}
         {modalOpen && (
           <div className="parking-modal">
             <div className="parking-modal__content">
@@ -283,7 +356,6 @@ function ParkingPage() {
             </div>
           </div>
         )}
-        {/* Модальное окно успеха */}
         {successModal && (
           <div className="parking-modal">
             <div className="parking-modal__content" style={{ background: "#555"}}>
@@ -333,7 +405,6 @@ function ParkingPage() {
             </div>
           </div>
         )}
-        {/* Модальное окно подтверждения снятия брони */}
         {unreserveConfirmModal && (
           <div className="parking-modal">
             <div className="parking-modal__content">
@@ -365,7 +436,6 @@ function ParkingPage() {
             </div>
           </div>
         )}
-        {/* Модальное окно успешного снятия брони */}
         {unreserveSuccessModal && (
           <div className="parking-modal">
             <div className="parking-modal__content" style={{ background: "#555" }}>
@@ -412,6 +482,46 @@ function ParkingPage() {
               >
                 Техподдержка
               </a>
+            </div>
+          </div>
+        )}
+        {/* --- Admin модалка --- */}
+        {isAdmin && adminModal && (
+          <div className="parking-modal">
+            <div className="parking-modal__content">
+              <button className="parking-modal__close" onClick={() => setAdminModal(false)}>×</button>
+              <div className="parking-modal__title">
+                {adminReserved[adminSelectedSpot]
+                  ? `Место ${adminSelectedSpot} уже забронировано для ${adminReserved[adminSelectedSpot]}`
+                  : `Забронировать место ${adminSelectedSpot}`}
+              </div>
+              <form
+                onSubmit={handleAdminReserve}
+                style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 20 }}
+              >
+                <input
+                  type="email"
+                  placeholder="Почта пользователя"
+                  value={adminEmail}
+                  onChange={e => setAdminEmail(e.target.value)}
+                  required
+                  disabled={!!adminReserved[adminSelectedSpot]}
+                />
+                {!adminReserved[adminSelectedSpot] ? (
+                  <button className="parking-modal__btn" type="submit">
+                    Забронировать
+                  </button>
+                ) : (
+                  <button
+                    className="parking-modal__btn"
+                    type="button"
+                    style={{ background: "#ffe066", color: "#222" }}
+                    onClick={handleAdminUnreserve}
+                  >
+                    Снять бронь
+                  </button>
+                )}
+              </form>
             </div>
           </div>
         )}

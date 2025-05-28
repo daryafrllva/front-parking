@@ -51,7 +51,7 @@ export const RegistrationPage = () => {
 
         localStorage.setItem('userEmail', data.email);
         console.log('Email сохранен:', data.email);
-        navigate('/code-email', { state: { email: data.email, isRegistration: true } });
+        navigate('/create-password', { state: { email: data.email, isRegistration: true } });
     };
 
     return (
